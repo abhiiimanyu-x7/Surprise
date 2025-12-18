@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You, Shan e Fatima Ma'am!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Patrick+Hand&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            /* Pink Theme Palette */
+            --bg-gradient-1: #fad0c4;
+            --bg-gradient-2: #ffd1ff;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --primary-pink: #ff6b81;
+            --secondary-pink: #ff8fa3;
+            --text-dark: #5e3e4e;
+            --text-light: #865c6c;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            /* Soft pink gradient background */
+            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+            font-family: 'Quicksand', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background Canvas for floating hearts */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- Intro Envelope Screen --- */
+        #intro-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            transition: opacity 0.8s ease;
+        }
+
+        .envelope-container {
+            cursor: pointer;
+            text-align: center;
+            animation: float-intro 3s ease-in-out infinite;
+        }
+
+        .envelope-gif {
+            width: 150px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(255, 107, 129, 0.3);
+        }
+
+        .intro-text {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-top: 20px;
+        }
+
+        /* --- Main Card Container --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 550px;
+            padding: 35px;
+            border-radius: 30px;
+            /* Cute pinkish shadow */
+            box-shadow: 0 15px 35px rgba(255, 107, 129, 0.25);
+            text-align: center;
+            border: 3px solid #fff0f5;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* Subtle floating animation for the card */
+            animation: float-card 6s ease-in-out infinite;
+        }
+
+        .container.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--primary-pink);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0px #fff, 3px 3px 0px rgba(255, 107, 129, 0.2);
+        }
+
+        /* GIF Display Area */
+        .gif-display {
+            width: 100%;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
+        .gif-display img {
+            max-height: 100%;
+            max-width: 100%;
+            border-radius: 20px;
+            border: 4px solid #fff0f5;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Text Area with Typing Effect */
+        .message-box {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+            min-height: 180px; /* Ensure space for long text */
+            margin-bottom: 25px;
+            white-space: pre-wrap; /* Preserve line breaks in text */
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* Cute Button */
+        .btn {
+            background: linear-gradient(45deg, var(--primary-pink), var(--secondary-pink));
+            border: none;
+            padding: 15px 40px;
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 107, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(255, 107, 129, 0.5);
+        }
+
+        .hidden { display: none; }
+
+        /* Animations */
+        @keyframes float-intro {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes float-card {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="intro-screen">
+        <div class="envelope-container" onclick="openGift()">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzhieG03eXh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Lpdd1H0q66H3NxpUHK/giphy.gif" alt="Open Me" class="envelope-gif">
+            <p class="intro-text">A letter for Shan e Fatima Ma'am...<br>Tap to open! 💖</p>
+        </div>
+    </div>
+
+    <div class="container" id="main-card">
+        <h1 id="header-text">Dearest Ma'am...</h1>
+        
+        <div class="gif-display">
+            <img id="current-gif" src="" alt="Cute Sticker">
+        </div>
+
+        <div class="message-box" id="text-area"></div>
+
+        <button class="btn" id="action-btn" onclick="nextSlide()">Read Letter ✨</button>
+    </div>
+
+    <script>
+        /* --- JAVASCRIPT --- */
+
+        // 1. The "Human" Content - Longer, Emotional Letters
+        const slides = [
+            {
+                header: "Dear Shan e Fatima Ma'am,",
+                // Cute waving bear GIF
+                gifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExazJ5M3l5M3l5M3l5M3l5M3l5M3l5M3l5M3l5M3l5M3l5M3l5MyZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/3o7TKMt1n_zgy6YVkk/giphy.gif",
+                text: "We wanted to take a moment away from the chaos of assignments and exams to write this for you.\n\nSometimes, in the daily rush of classes, we forget to pause and genuinely thank the person standing at the front of the room, guiding us through it all. We didn't want another day to pass without you knowing how much we see you.",
+                btnText: "Continue Reading 🌸"
+            },
+            {
+                header: "More Than Just Teaching",
+                // Cute cat studying/working hard GIF
+                gifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3d4eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/13CoXDiaCcCoyk/giphy.gif",
+                text: "Thank you for the incredible hard work you put in that we don't always see. The hours spent preparing lessons, the patience in re-explaining difficult concepts until the 'aha!' moment hits our faces.\n\nYou don't just teach us subjects; you teach us how to think, how to be resilient when we don't understand something right away. Your dedication inspires us to work harder too.",
+                btnText: "The Emotional Impact 💖"
+            },
+            {
+                header: "The Heart You Put In",
+                // Cute hug/support GIF
+                gifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnd4eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/M8o1MOwcwsY2v6h8k/giphy.gif",
+                text: "What makes you truly special isn't just the knowledge you share, but the warmth you bring into the classroom. Thank you for creating a space where we feel safe to ask 'stupid' questions, for encouraging us when we doubt ourselves, and for believing in our potential even before we see it.\n\nIt’s that kindness that sticks with a student forever.",
+                btnText: "One Last Thing... ✨"
+            },
+            {
+                header: "A Massive Thank You!",
+                // Celebration confetti GIF
+                gifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnd4eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/l4pTfx2qLSznfnZyE/giphy.gif",
+                text: "We are so incredibly lucky to have you as our teacher. The impact you are making on our lives is something we will carry into our futures.\n\nThank you for everything, Ma'am. We appreciate you more than words can say!",
+                btnText: "Celebrate! 🎉"
+            }
+        ];
+
+        let currentSlide = -1;
+        const textArea = document.getElementById('text-area');
+        const headerText = document.getElementById('header-text');
+        const actionBtn = document.getElementById('action-btn');
+        const currentGif = document.getElementById('current-gif');
+        const introScreen = document.getElementById('intro-screen');
+        const mainCard = document.getElementById('main-card');
+        let typingTimeout;
+
+        // 2. State Management
+        function openGift() {
+            introScreen.style.opacity = '0';
+            setTimeout(() => {
+                introScreen.classList.add('hidden');
+                mainCard.classList.add('active');
+                nextSlide(); // Load first slide
+            }, 800);
+        }
+
+        function nextSlide() {
+            currentSlide++;
+
+            if (currentSlide >= slides.length) {
+                celebrate();
+                return;
+            }
+
+            const slide = slides[currentSlide];
+            
+            // Fade out elements briefly
+            textArea.style.opacity = 0;
+            currentGif.style.opacity = 0;
+            headerText.style.opacity = 0;
+            clearTimeout(typingTimeout);
+
+            setTimeout(() => {
+                // Update Content
+                headerText.innerText = slide.header;
+                actionBtn.innerText = slide.btnText;
+                currentGif.src = slide.gifUrl;
+                textArea.innerHTML = ""; // Clear for typing
+                
+                // Fade back in
+                headerText.style.opacity = 1;
+                currentGif.style.opacity = 1;
+                textArea.style.opacity = 1;
+
+                // Start typing effect
+                typeWriter(slide.text, 0);
+            }, 500);
+        }
+
+        // 3. Typing Effect (Modified for longer text)
+        function typeWriter(text, i) {
+            if (i < text.length) {
+                textArea.innerHTML += text.charAt(i);
+                i++;
+                // Faster typing speed for longer text
+                typingTimeout = setTimeout(() => typeWriter(text, i), 20); 
+            }
+        }
+
+        // 4. Final Celebration
+        function celebrate() {
+            actionBtn.style.display = 'none';
+            headerText.innerText = "We ❤️ You Shan e Fatima Ma'am!";
+            // Final celebration GIF
+            currentGif.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnd4eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eXJ6bnh2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Is1O1TWV0LEJi/giphy.gif";
+            textArea.innerHTML = "<div style='text-align:center; font-size: 1.5rem; color: var(--primary-pink);'>Thank you for being amazing!</div>";
+            
+            isCelebrating = true; // Triggers heart explosion
+        }
+
+
+        /* --- BACKGROUND & ANIMATION ENGINE (CANVAS) --- */
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        let isCelebrating = false;
+
+        class Particle {
+            constructor(isConfetti = false) {
+                this.x = Math.random() * canvas.width;
+                this.y = isConfetti ? canvas.height + 20 : Math.random() * canvas.height;
+                this.size = Math.random() * 15 + 5;
+                // Pink/Red palette for hearts
+                const hues = [340, 350, 0, 10, 330]; 
+                this.color = `hsl(${hues[Math.floor(Math.random() * hues.length)]}, 100%, 75%)`;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = isConfetti ? Math.random() * -5 - 2 : Math.random() * 2 - 1;
+                this.isConfetti = isConfetti;
+                this.gravity = isConfetti ? 0.1 : 0;
+                this.rotation = Math.random() * 360;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.speedY += this.gravity;
+                this.rotation += 2;
+
+                // Wrap around for ambient particles
+                if (!this.isConfetti) {
+                    if (this.x < 0) this.x = canvas.width;
+                    if (this.x > canvas.width) this.x = 0;
+                    if (this.y < 0) this.y = canvas.height;
+                    if (this.y > canvas.height) this.y = 0;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.font = this.size + "px serif";
+                ctx.fillText("❤", 0, 0); // Draw hearts instead of circles
+                ctx.restore();
+            }
+        }
+
+        function init() {
+            // Create initial ambient floating hearts
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Add explosion hearts if celebrating
+            if(isCelebrating && particles.length < 250) {
+                 particles.push(new Particle(true));
+            }
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                 // Remove fallen confetti
+                if (particles[i].isConfetti && particles[i].y > canvas.height + 50) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+    </script>
+</body>
+</html>
