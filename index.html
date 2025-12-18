@@ -1,47 +1,33 @@
-I apologize for that! "Content not available" happens when the specific image links expire or get blocked by the hosting site. I also suspect the background animation layer was blocking your clicks on the "Continue" button.
-
-Here is the **Fixed & Robust Version**.
-
-### Changes Made to Fix It:
-
-1. **Fixed Images:** I have replaced the links with **high-stability, direct URLs** that won't show "Content not available."
-2. **Fixed Button:** I added `pointer-events: none` to the background animation so it doesn't block your clicks.
-3. **Code Logic:** I moved the JavaScript to a safer loading method so the "Continue" button is guaranteed to work.
-
-Save this as an `.html` file and run it.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Shan e Fatima Ma'am</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Gaegu:wght@400;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <title>Thank You Ma'am</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        /* --- CORE STYLES --- */
         :root {
             --bg-1: #ffdde1;
             --bg-2: #ee9ca7;
-            --white: #ffffff;
-            --pink-dark: #d63384;
-            --pink-btn: #ff6b81;
-            --text: #6d4c41;
+            --card: #ffffff;
+            --pink-accent: #ff6b81;
+            --text-color: #5d4037; /* Dark brown for readability */
         }
 
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(to right, var(--bg-1), var(--bg-2));
+            background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
             font-family: 'Quicksand', sans-serif;
             height: 100vh;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            user-select: none; /* Prevents highlighting text by accident */
         }
 
-        /* --- BACKGROUND PARTICLES --- */
+        /* The Background Particles Layer - Click-through enabled */
         #canvas {
             position: absolute;
             top: 0;
@@ -49,132 +35,172 @@ Save this as an `.html` file and run it.
             width: 100%;
             height: 100%;
             z-index: 0;
-            pointer-events: none; /* CRITICAL FIX: Allows you to click through the canvas */
-        }
-
-        /* --- INTRO SCREEN --- */
-        #intro-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            background: linear-gradient(to right, var(--bg-1), var(--bg-2));
-            transition: opacity 1s ease;
-        }
-
-        .envelope-box {
-            cursor: pointer;
-            text-align: center;
-            animation: bounce 2s infinite;
-        }
-
-        .envelope-img {
-            width: 150px;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
-        }
-
-        .tap-text {
-            font-family: 'Gaegu', cursive;
-            font-size: 1.8rem;
-            color: var(--pink-dark);
-            margin-top: 15px;
-            font-weight: 700;
+            pointer-events: none; /* Crucial Fix: Allows clicks to pass through */
         }
 
         /* --- MAIN CARD --- */
         .card {
             position: relative;
-            z-index: 10;
+            z-index: 50; /* High z-index to sit above canvas */
             background: rgba(255, 255, 255, 0.95);
-            width: 90%;
-            max-width: 500px;
+            width: 85%;
+            max-width: 480px;
             padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 20px 50px rgba(214, 51, 132, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(255, 107, 129, 0.3);
             text-align: center;
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 4px solid #fff;
+            border: 4px solid #fff0f5;
+            transition: transform 0.3s ease;
         }
 
-        .card.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* GIF Container */
-        .gif-container {
+        /* --- CSS ART STAGE (Where we draw the shapes) --- */
+        .art-stage {
+            height: 120px;
             width: 100%;
-            height: 180px;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
+            position: relative;
         }
 
-        .gif-container img {
-            max-height: 100%;
-            max-width: 100%;
-            border-radius: 15px;
-            /* Placeholder styling if image breaks */
-            background-color: #ffe6e9; 
+        /* 1. CSS ART: ENVELOPE */
+        .art-envelope {
+            width: 80px;
+            height: 60px;
+            background: #ff6b81;
+            position: relative;
+            border-radius: 5px;
+            animation: float 2s infinite ease-in-out;
+        }
+        .art-envelope::before { /* Flap */
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-top: 30px solid #ff8fa3;
+        }
+        .art-envelope::after { /* Fold */
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            border-left: 40px solid #ff4757;
+            border-top: 30px solid transparent;
+            border-bottom: 30px solid transparent;
         }
 
+        /* 2. CSS ART: PENCIL (For Hard Work) */
+        .art-pencil {
+            width: 100px;
+            height: 20px;
+            background: #feca57;
+            position: relative;
+            border-radius: 0 5px 5px 0;
+            animation: write 1s infinite alternate;
+        }
+        .art-pencil::before { /* Eraser */
+            content: '';
+            position: absolute;
+            left: -15px; top: 0;
+            width: 15px; height: 20px;
+            background: #ff6b81;
+            border-radius: 3px 0 0 3px;
+        }
+        .art-pencil::after { /* Tip */
+            content: '';
+            position: absolute;
+            right: -20px; top: 0;
+            border-left: 20px solid #feca57;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        /* 3. CSS ART: HEART (For Love/Impact) */
+        .art-heart {
+            background-color: #ff4757;
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            position: relative;
+            transform: rotate(-45deg);
+            animation: beat 0.8s infinite;
+        }
+        .art-heart::before,
+        .art-heart::after {
+            content: "";
+            width: 50px;
+            height: 50px;
+            background-color: #ff4757;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .art-heart::before { top: -25px; left: 0; }
+        .art-heart::after { top: 0; left: 25px; }
+
+        /* 4. CSS ART: STAR (For Celebration) */
+        .art-star {
+            width: 0; height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 50px solid #feca57;
+            position: relative;
+            animation: spin 3s infinite linear;
+        }
+        .art-star::after {
+            content: "";
+            width: 0; height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 50px solid #feca57;
+            position: absolute;
+            top: 18px; left: -25px;
+        }
+
+        /* --- TYPOGRAPHY & BUTTONS --- */
         h1 {
-            font-family: 'Fredoka One', cursive;
-            color: var(--pink-btn);
+            color: var(--pink-accent);
             font-size: 2rem;
-            margin: 0 0 15px 0;
-            line-height: 1.2;
+            margin-bottom: 10px;
+            font-weight: 800; /* Extra Bold */
         }
 
-        .text-content {
-            font-family: 'Gaegu', cursive;
-            font-size: 1.4rem; /* Larger, readable font */
-            line-height: 1.4;
-            color: var(--text);
-            min-height: 160px; /* Prevents jumping */
+        .text-box {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 150px;
             text-align: left;
-            margin-bottom: 20px;
-            white-space: pre-wrap; /* Keeps paragraphs */
+            margin-bottom: 25px;
+            font-weight: 700; /* BOLD TEXT */
         }
 
-        /* --- BUTTON STYLING --- */
         .btn {
-            background-color: var(--pink-btn);
+            background: var(--pink-accent);
             color: white;
             border: none;
             padding: 15px 40px;
-            border-radius: 50px;
-            font-family: 'Fredoka One', cursive;
             font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(255, 107, 129, 0.4);
-            transition: transform 0.2s, background 0.2s;
-            /* Ensure button is clickable */
-            position: relative; 
-            z-index: 20; 
+            transition: transform 0.2s;
+            display: inline-block; /* Ensures it behaves correctly */
         }
 
         .btn:hover {
             transform: scale(1.05);
-            background-color: var(--pink-dark);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
+            background: #ff4757;
         }
 
         .hidden { display: none !important; }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
+        /* --- ANIMATIONS --- */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes beat { 0% { transform: scale(1) rotate(-45deg); } 50% { transform: scale(1.1) rotate(-45deg); } }
+        @keyframes write { 0% { transform: translateX(-10px) rotate(-5deg); } 100% { transform: translateX(10px) rotate(5deg); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
     </style>
 </head>
@@ -182,209 +208,170 @@ Save this as an `.html` file and run it.
 
     <canvas id="canvas"></canvas>
 
-    <div id="intro-screen">
-        <div class="envelope-box" id="start-btn">
-            <img src="https://cdn-icons-png.flaticon.com/512/561/561135.png" alt="Mail" class="envelope-img">
-            <div class="tap-text">A Message for Shan e Fatima Ma'am<br>Tap to Open 💌</div>
+    <div id="intro-screen" class="card">
+        <div class="art-stage">
+            <div class="art-envelope"></div>
         </div>
+        <h1>For Shan e Fatima Ma'am</h1>
+        <p style="font-weight: bold; color: #888;">Tap below to open your letter</p>
+        <button class="btn" onclick="startJourney()">Open 💌</button>
     </div>
 
-    <div class="card hidden" id="main-card">
-        <h1 id="slide-title">Dearest Ma'am...</h1>
+    <div id="main-card" class="card hidden">
+        <h1 id="header">Dear Ma'am...</h1>
         
-        <div class="gif-container">
-            <img id="slide-gif" src="" alt="Cute Sticker">
-        </div>
+        <div class="art-stage" id="art-container"></div>
 
-        <div class="text-content" id="slide-text"></div>
+        <div class="text-box" id="text-area"></div>
 
-        <button class="btn" id="next-btn">Read Letter 🌸</button>
+        <button class="btn" id="next-btn" onclick="nextSlide()">Continue...</button>
     </div>
 
     <script>
-        /* --- JAVASCRIPT --- */
-        
-        // Data for the slides - Using reliable Giphy Sticker IDs
+        /* --- LOGIC --- */
+
+        // 1. Content Data
         const slides = [
             {
-                title: "Dear Shan e Fatima Ma'am,",
-                // Bear writing
-                gif: "https://media1.giphy.com/media/d2b4K84nfb1R95V6/200w.gif?cid=6c09b952z15l23l3t2t2z15l23l3t2t2&rid=200w.gif",
-                text: "We wanted to take a moment away from the chaos of assignments to write this for you.\n\nSometimes, in the daily rush, we forget to pause and genuinely thank the person guiding us. We didn't want another day to pass without you knowing how much we appreciate you.",
-                btn: "Continue Reading..."
+                header: "Dear Shan e Fatima Ma'am,",
+                artClass: "art-envelope",
+                text: "We wanted to pause for a moment to say: Thank You. In the rush of assignments and deadlines, we sometimes forget to appreciate the person guiding us through it all. We see your effort, and we value it.",
+                btn: "Read More"
             },
             {
-                title: "More Than A Teacher",
-                // Cute cat working hard
-                gif: "https://media3.giphy.com/media/CjmvTCZf2U3p09Cn0h/200w.gif",
-                text: "Thank you for the hard work you put in that we don't always see. The patience in re-explaining difficult concepts until the 'aha!' moment hits us.\n\nYou don't just teach us from books; you teach us resilience and how to believe in ourselves.",
-                btn: "The Emotional Part 💖"
+                header: "Hard Work & Dedication",
+                artClass: "art-pencil",
+                text: "Thank you for not just teaching from the book, but teaching with your heart. Your patience in explaining things and your dedication to our growth does not go unnoticed. You inspire us to work harder.",
+                btn: "The Impact"
             },
             {
-                title: "The Impact",
-                // Heart Hug
-                gif: "https://media2.giphy.com/media/l4pTdcifPZLpDjL1e/200w.gif",
-                text: "Teachers plant seeds that grow forever. The kindness you show creates a safe space where we aren't afraid to ask questions.\n\nYour encouragement is the foundation of our future success. We are so lucky to have you.",
-                btn: "One Last Surprise ✨"
+                header: "The Impact",
+                artClass: "art-heart",
+                text: "Teachers plant seeds that grow forever. The encouragement you give us today is the foundation of our success tomorrow. Thank you for creating a space where we feel supported.",
+                btn: "Final Wish"
             },
             {
-                title: "Thank You!!",
-                // Celebration
-                gif: "https://media0.giphy.com/media/KyS29K9t954u3v6bFq/200w.gif",
-                text: "For the extra hours, for the care, and for being YOU.\n\nWe appreciate you more than words can say, Ma'am!",
+                header: "We Appreciate You!",
+                artClass: "art-star",
+                text: "For the extra hours, the kindness, and the guidance: Thank you, Ma'am! We are truly lucky to have you.",
                 btn: "Celebrate! 🎉"
             }
         ];
 
-        // Variables
-        let currentIndex = -1;
+        let currentIndex = 0;
         const introScreen = document.getElementById('intro-screen');
-        const startBtn = document.getElementById('start-btn');
         const mainCard = document.getElementById('main-card');
-        const slideTitle = document.getElementById('slide-title');
-        const slideGif = document.getElementById('slide-gif');
-        const slideText = document.getElementById('slide-text');
+        const header = document.getElementById('header');
+        const artContainer = document.getElementById('art-container');
+        const textArea = document.getElementById('text-area');
         const nextBtn = document.getElementById('next-btn');
 
-        // EVENT LISTENERS
-        startBtn.addEventListener('click', () => {
-            introScreen.style.opacity = '0';
-            setTimeout(() => {
-                introScreen.classList.add('hidden');
-                mainCard.classList.remove('hidden');
-                // Small delay to allow display:block to apply before adding opacity class
-                setTimeout(() => mainCard.classList.add('active'), 50);
-                loadNextSlide();
-            }, 1000);
-        });
-
-        nextBtn.addEventListener('click', loadNextSlide);
-
-        function loadNextSlide() {
-            currentIndex++;
-
-            // If finished, trigger celebration
-            if (currentIndex >= slides.length) {
-                doCelebration();
-                return;
-            }
-
-            const slide = slides[currentIndex];
-
-            // 1. Fade out text to make transition smooth
-            slideText.style.opacity = 0;
-            slideTitle.style.opacity = 0;
-            
-            setTimeout(() => {
-                // 2. Update Content
-                slideTitle.innerText = slide.title;
-                slideGif.src = slide.gif;
-                nextBtn.innerText = slide.btn;
-                
-                // 3. Clear text for typing effect
-                slideText.innerHTML = "";
-                slideText.style.opacity = 1;
-                slideTitle.style.opacity = 1;
-
-                // 4. Start Typing
-                typeWriter(slide.text, 0);
-            }, 300);
+        // 2. Navigation Functions
+        function startJourney() {
+            introScreen.classList.add('hidden');
+            mainCard.classList.remove('hidden');
+            renderSlide(0);
         }
 
-        // Typing Effect Function
+        function nextSlide() {
+            currentIndex++;
+            if (currentIndex >= slides.length) {
+                celebrate();
+            } else {
+                renderSlide(currentIndex);
+            }
+        }
+
+        function renderSlide(index) {
+            const slide = slides[index];
+            
+            // Reset for animation
+            textArea.innerHTML = "";
+            header.innerText = slide.header;
+            nextBtn.innerText = slide.btn;
+
+            // Render CSS Art
+            artContainer.innerHTML = `<div class="${slide.artClass}"></div>`;
+
+            // Start Typing
+            typeWriter(slide.text, 0);
+        }
+
+        // 3. Typing Effect
         function typeWriter(text, i) {
             if (i < text.length) {
-                slideText.innerHTML += text.charAt(i);
+                textArea.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(() => typeWriter(text, i), 25); // Speed of typing
+                setTimeout(() => typeWriter(text, i), 25);
             }
         }
 
-        // Final Celebration Logic
-        function doCelebration() {
-            nextBtn.style.display = 'none'; // Hide button
-            slideTitle.innerText = "We ❤️ You Ma'am!";
-            slideGif.src = "https://media4.giphy.com/media/TdfyKrN7HGTIY/200w.gif"; // Big heart gif
-            slideText.innerHTML = "<div style='text-align:center; font-size:1.5rem; margin-top:20px; color:#d63384; font-weight:bold;'>Thank you for everything!</div>";
+        // 4. Celebration Logic
+        function celebrate() {
+            header.innerText = "We ❤️ You Ma'am!";
+            artContainer.innerHTML = `<div class="art-heart"></div>`;
+            textArea.innerHTML = "Thank you for everything!";
+            textArea.style.textAlign = "center";
+            nextBtn.style.display = "none";
             
-            // Trigger Particle Explosion
-            isCelebrating = true;
+            // Trigger Confetti
+            startConfetti();
         }
 
-        /* --- BACKGROUND ANIMATION (Hearts) --- */
+        // 5. Background Animation (Hearts)
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
-        
-        let width, height;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
         let particles = [];
-        let isCelebrating = false;
 
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor(isExplosion) {
-                this.x = Math.random() * width;
-                this.y = isExplosion ? height + 20 : Math.random() * height;
-                this.size = Math.random() * 20 + 10;
-                this.speedY = isExplosion ? Math.random() * -10 - 5 : Math.random() * 1 + 0.5;
-                this.speedX = Math.random() * 4 - 2;
-                this.color = `hsl(${Math.random() * 60 + 320}, 100%, 70%)`; // Pink/Red Hues
-                this.spin = Math.random() * 360;
-                this.isExplosion = isExplosion;
-            }
-            update() {
-                this.y -= this.speedY;
-                this.x += this.speedX;
-                this.spin += 2;
-
-                if(this.isExplosion) {
-                    this.speedY -= 0.1; // Gravity
-                } else {
-                    // Reset ambient particles
-                    if (this.y < -50) this.y = height + 50;
-                }
-            }
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.spin * Math.PI / 180);
-                ctx.fillStyle = this.color;
-                ctx.font = this.size + "px Arial";
-                ctx.fillText("❤️", 0, 0);
-                ctx.restore();
+        function createParticles() {
+            for(let i=0; i<40; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 20 + 10,
+                    speedY: Math.random() * 1 + 0.5,
+                    color: `rgba(255, 105, 180, ${Math.random() * 0.5})`
+                });
             }
         }
 
-        // Initialize Ambient Particles
-        for(let i=0; i<30; i++) particles.push(new Particle(false));
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            
-            // Add explosion particles
-            if(isCelebrating && particles.length < 200) {
-                particles.push(new Particle(true));
-            }
-
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach((p, index) => {
-                p.update();
-                p.draw();
-                // Clean up explosion particles
-                if(p.isExplosion && p.y > height + 50) particles.splice(index, 1);
+                p.y -= p.speedY;
+                if(p.y < -20) p.y = canvas.height + 20;
+
+                ctx.fillStyle = p.color;
+                ctx.font = p.size + "px Arial";
+                ctx.fillText("❤️", p.x, p.y);
             });
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animateParticles);
         }
-        animate();
+
+        function startConfetti() {
+            // Add colorful particles for celebration
+            for(let i=0; i<100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + Math.random() * 200, // Start from bottom
+                    size: Math.random() * 10 + 5,
+                    speedY: Math.random() * 5 + 2, // Fast upward
+                    color: `hsl(${Math.random()*360}, 100%, 50%)`
+                });
+            }
+        }
+
+        createParticles();
+        animateParticles();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
     </script>
 </body>
 </html>
-
-```
